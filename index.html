@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Портфолио — Arsen Iskenderov</title>
+  <style>
+    :root{
+      --bg: #0b0b0b;
+      --card: #121212;
+      --text: #eee;
+      --muted: #bdbdbd;
+      --accent: #800020;
+      --accent-2: #a8324a;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(0,0,0,0.04);
+      --max-width: 1100px;
+    }
+    body.light{
+      --bg: #faf7f6;
+      --card: #ffffff;
+      --text: #111;
+      --muted: #555;
+      --glass: rgba(0,0,0,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(180deg,var(--bg) 0%, #070707 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background .35s ease,color .25s ease;
+      line-height:1.45;
+      padding-bottom:100px;
+    }
+    a{color:var(--accent); text-decoration:none}
+    img{max-width:100%; display:block}
+    .wrap{max-width:var(--max-width); margin:28px auto; padding:0 20px;}
+    header.top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      background: linear-gradient(90deg,var(--accent) 0%, var(--accent-2) 100%);
+      padding:18px 24px;
+      border-radius:12px;
+      color:#fff;
+      position:sticky;
+      top:16px;
+      z-index:60;
+      box-shadow:0 8px 30px rgba(0,0,0,0.45);
+    }
+    .brand {display:flex; gap:14px; align-items:center}
+    .logo {
+      width:60px; height:60px; border-radius:12px;
+      background: linear-gradient(135deg,#fff2 0%, #fff0 40%), rgba(255,255,255,0.06);
+      display:grid; place-items:center; font-weight:700; font-size:18px;
+      border:1px solid rgba(255,255,255,0.06);
+    }
+    .brand h1{margin:0; font-size:18px; letter-spacing:0.6px}
+    
+    /* Скрываем обычную навигацию на всех экранах */
+    nav.topnav{display:none}
+    
+    /* Гамбургер меню - всегда видно */
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 100;
+    }
+    .hamburger span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+    
+    /* Мобильное меню - адаптивное для всех экранов */
+    .mobile-nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: min(400px, 90vw);
+      height: 100vh;
+      background: var(--card);
+      padding: 100px 30px 30px;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 90;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+    .mobile-nav.active {
+      right: 0;
+    }
+    .mobile-nav a {
+      padding: 16px 20px;
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .mobile-nav a:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: translateX(-5px);
+      box-shadow: 0 5px 15px rgba(128, 0, 32, 0.3);
+    }
+    .mobile-nav .contact-info {
+      margin-top: 30px;
+      padding: 20px;
+      background: var(--glass);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .mobile-nav .contact-info .small {
+      margin: 8px 0;
+      text-align: center;
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 85;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(3px);
+    }
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:24px;
+      margin-top:22px;
+      align-items:start;
+    }
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:20px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.5);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .intro h2{margin:0 0 8px 0; color:var(--accent); font-size:20px}
+    .intro p{margin:0 0 12px 0; color:var(--muted)}
+    .contact {display:flex; gap:12px; flex-direction:column; font-size:14px}
+    .contact a{color:var(--text)}
+    .small {font-size:13px; color:var(--muted)}
+    .photo-wrap{display:flex; flex-direction:column; gap:12px; align-items:center}
+    .photo-frame{
+      width:240px; height:240px; border-radius:12px; overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      display:grid; place-items:center; border:1px solid rgba(255,255,255,0.04);
+    }
+    .photo-frame img{width:100%; height:100%; object-fit:cover; display:block}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3,1fr);
+      gap:14px;
+    }
+    .skill {
+      background:var(--glass);
+      border-radius:12px;
+      padding:14px;
+      display:flex; gap:12px; align-items:center;
+      transition:transform .25s ease, box-shadow .25s ease, background .25s;
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .skill:hover{transform:translateY(-6px); box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+    .skill .icon{width:44px; height:44px; display:grid; place-items:center; background:var(--card); border-radius:10px; padding:6px}
+    .skill p{margin:0; font-weight:600; font-size:14px; color:var(--text)}
+    .projects {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+      gap:16px;
+    }
+    .project{
+      border-radius:12px; overflow:hidden; background:var(--card); border:1px solid rgba(255,255,255,0.03);
+      transition:transform .28s ease, box-shadow .28s ease;
+      height:auto; padding:12px;
+      display:flex; flex-direction:column; justify-content:center; align-items:center; gap:6px; text-align:center;
+    }
+    .project h3{margin:0;color:var(--accent); font-size:18px;}
+    .project .small{margin:0;color:var(--muted); font-size:14px;}
+    .movies{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap:12px;
+    }
+    .movie{
+      border-radius:10px; overflow:hidden; background:var(--card); text-align:center; padding:8px;
+      cursor:pointer; transition:transform .2s; border:1px solid rgba(255,255,255,0.03)
+    }
+    .movie:hover{transform:translateY(-6px)}
+    .movie img{height:200px; object-fit:cover; border-radius:6px}
+    footer{margin-top:28px; text-align:center; color:var(--muted)}
+    #toTop{position:fixed; right:18px; bottom:18px; z-index:70}
+    
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .skill .icon{width:40px;height:40px}
+      .photo-frame{width:200px;height:200px}
+    }
+    @media (max-width:768px){
+      .mobile-nav a {
+        font-size: 16px;
+        padding: 14px 18px;
+      }
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      .photo-frame{width:160px;height:160px}
+      .brand h1{font-size:16px}
+      .projects{grid-template-columns:1fr}
+      .movies{grid-template-columns:1fr 1fr}
+      .movie img{height:160px}
+      .mobile-nav {
+        width: 85vw;
+        padding: 90px 20px 20px;
+      }
+    }
+    @media (max-width:400px){
+      .movies{grid-template-columns:1fr}
+      .movie img{height:140px}
+      .mobile-nav a {
+        font-size: 15px;
+        padding: 12px 16px;
+      }
+    }
+    .reveal{opacity:0; transform:translateY(30px); transition:all .7s cubic-bezier(.2,.9,.2,1)}
+    .reveal.visible{opacity:1; transform:none}
+    #themeToggle{
+      position:fixed; top:18px; right:18px; width:48px; height:48px;
+      border:0; border-radius:12px; background:var(--card); cursor:pointer;
+      display:grid; place-items:center; font-size:20px; box-shadow:0 6px 22px rgba(0,0,0,0.4); z-index:80;
+    }
+    
+    /* Кнопка смены имени */
+    #changeNameBtn {
+      position:fixed;
+      top:18px;
+      right:78px;
+      padding:8px 12px;
+      border:none;
+      border-radius:10px;
+      background:var(--accent);
+      color:#fff;
+      cursor:pointer;
+      font-size:14px;
+      box-shadow:0 6px 22px rgba(0,0,0,0.4);
+      z-index:80;
+      transition: all 0.3s ease;
+    }
+    #changeNameBtn:hover {
+      background: var(--accent-2);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body class="">
+  <header class="top wrap" role="banner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">AI</div>
+      <div>
+        <h1>Arsen Iskenderov</h1>
+        <div class="small">Frontend & Java Developer</div>
+      </div>
+    </div>
+    
+    <!-- Старая навигация скрыта -->
+    <nav class="topnav" role="navigation" aria-label="Главное меню" style="display: none;">
+      <a href="#about">Обо мне</a>
+      <a href="#skills">Навыки</a>
+      <a href="#projects">Проекты</a>
+      <a href="#movies">Фильмы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    
+    <!-- Контакты в хедере -->
+    <div class="header-contact" style="display:flex;gap:10px;align-items:center">
+      <div class="small">arsen.dev@example.com</div>
+      <div class="small">+996 (777) 123-456</div>
+    </div>
+    
+    <!-- Гамбургер кнопка - всегда видна -->
+    <button class="hamburger" aria-label="Меню" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Мобильное меню - для всех экранов -->
+  <div class="overlay"></div>
+  <nav class="mobile-nav" role="navigation" aria-label="Основное меню">
+    <a href="#about" class="menu-link">👤 Обо мне</a>
+    <a href="#skills" class="menu-link">💻 Навыки</a>
+    <a href="#projects" class="menu-link">🚀 Проекты</a>
+    <a href="#movies" class="menu-link">🎬 Фильмы</a>
+    <a href="#contacts" class="menu-link">📞 Контакты</a>
+    
+    <div class="contact-info">
+      <h3 style="margin:0 0 15px 0; text-align:center; color:var(--accent);">Контакты</h3>
+      <div class="small">📧 arsen.dev@example.com</div>
+      <div class="small">📞 +996 (777) 123-456</div>
+      <div class="small" style="margin-top:15px;">
+        <a href="https://github.com/arsenisk" target="_blank" style="color:var(--accent);">GitHub</a> • 
+        <a href="https://linkedin.com/in/arsenisk" target="_blank" style="color:var(--accent);">LinkedIn</a>
+      </div>
+    </div>
+    
+    <div style="margin-top:20px; text-align:center;">
+      <button id="themeToggleMobile" style="padding:10px 20px; border:none; border-radius:8px; background:var(--accent); color:#fff; cursor:pointer;">
+        🌙 Сменить тему
+      </button>
+    </div>
+  </nav>
+
+  <main class="wrap" role="main">
+    <section id="about" class="card hero reveal" aria-labelledby="aboutTitle">
+      <div class="intro">
+        <h2 id="aboutTitle">Привет — я Arsen</h2>
+        <p>Разрабатываю интерфейсы и приложения. Люблю чистый код, интересные алгоритмы и красивый дизайн. Работаю с Java, Web и проектами на React/HTML/CSS.</p>
+        <div style="margin-top:12px" class="small">
+          <strong>Изучаю:</strong> JavaFX, React, TypeScript, алгоритмы.<br>
+          <strong>Инструменты:</strong> VS Code, IntelliJ IDEA, Figma, Git, Photoshop, Blender.
+        </div>
+      </div>
+      <aside class="photo-wrap" aria-label="Фото">
+        <div class="photo-frame" id="photoFrame" title="Выбери и вставь фото">
+          <img id="userPhoto" alt="Твоё фото" src="data:image/svg+xml;utf8,
+            <svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><rect width='100%' height='100%' fill='%23dddddd'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23800020' font-size='28'>Добавь фото</text></svg>">
+        </div>
+        <a class="btn" href="#projects" style="margin-top:10px; display:inline-block; padding:10px 12px; background:var(--accent); color:#fff; border-radius:10px">Мои проекты</a>
+      </aside>
+    </section>
+
+    <section id="skills" class="card reveal" aria-labelledby="skillsTitle" style="margin-top:18px">
+      <h2 id="skillsTitle">Навыки и программы</h2>
+      <div class="grid" style="margin-top:12px">
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" style="width:36px;height:36px"></div>
+          <div><p>Java</p><div class="small">OOP, коллекции, потоки</div></div>
+        </div>
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML" style="width:34px;height:34px"></div>
+          <div><p>HTML</p><div class="small">Семантика, доступность</div></div>
+        </div>
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS" style="width:34px;height:34px"></div>
+          <div><p>CSS</p><div class="small">Flex, Grid, анимации</div></div>
+        </div>
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" style="width:34px;height:34px"></div>
+          <div><p>React</p><div class="small">Компоненты, хуки</div></div>
+        </div>
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" style="width:34px;height:34px"></div>
+          <div><p>Python</p><div class="small">Скрипты, анализ данных</div></div>
+        </div>
+        <div class="skill">
+          <div class="icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" style="width:34px;height:34px"></div>
+          <div><p>Git & GitHub</p><div class="small">Контроль версий</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="card reveal" aria-labelledby="projectsTitle" style="margin-top:18px">
+      <h2 id="projectsTitle">Проекты</h2>
+      <div class="projects" style="margin-top:12px">
+        <div class="project" tabindex="0">
+          <div class="photo-frame" style="width:200px; height:120px; margin-bottom:8px;">
+            <img src="data:image/svg+xml;utf8,
+              <svg xmlns='http://www.w3.org/2000/svg' width='400' height='200'>
+                <rect width='100%' height='100%' fill='%23dddddd'/>
+                <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23800020' font-size='16'>Добавь фото</text>
+              </svg>" alt="Фото проекта 1">
+          </div>
+          <h3>Todo App</h3>
+          <p class="small">Простое веб-приложение для ведения задач с React и LocalStorage.</p>
+        </div>
+        <div class="project" tabindex="0">
+          <div class="photo-frame" style="width:200px; height:120px; margin-bottom:8px;">
+            <img src="data:image/svg+xml;utf8,
+              <svg xmlns='http://www.w3.org/2000/svg' width='400' height='200'>
+                <rect width='100%' height='100%' fill='%23dddddd'/>
+                <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23800020' font-size='16'>Добавь фото</text>
+              </svg>" alt="Фото проекта 2">
+          </div>
+          <h3>Calculator</h3>
+          <p class="small">Калькулятор на JavaFX с поддержкой основных математических операций.</p>
+        </div>
+        <div class="project" tabindex="0">
+          <div class="photo-frame" style="width:200px; height:120px; margin-bottom:8px;">
+            <img src="data:image/svg+xml;utf8,
+              <svg xmlns='http://www.w3.org/2000/svg' width='400' height='200'>
+                <rect width='100%' height='100%' fill='%23dddddd'/>
+                <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23800020' font-size='16'>Добавь фото</text>
+              </svg>" alt="Фото проекта 3">
+          </div>
+          <h3>Portfolio Site</h3>
+          <p class="small">Моё персональное портфолио с адаптивной версткой и интерактивными эффектами.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="movies" class="card reveal" aria-labelledby="moviesTitle" style="margin-top:18px">
+      <h2 id="moviesTitle">Любимые фильмы и сериалы</h2>
+      <div class="movies">
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/6/61/Breaking_Bad_title_card.png" alt="Во все тяжкие">
+          <div class="small">Во все тяжкие</div>
+        </div>
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/6/69/Better_Call_Saul_title_card.png" alt="Лучше звоните Солу">
+          <div class="small">Лучше звоните Солу</div>
+        </div>
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/4c/El_Camino_poster.png" alt="Эль Камино">
+          <div class="small">Эль Камино</div>
+        </div>
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/f/fc/Scent_of_a_Woman_poster.jpg" alt="Запах женщины">
+          <div class="small">Запах женщины</div>
+        </div>
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/3/3e/The_Killer_film_poster.jpg" alt="Убийца">
+          <div class="small">Убийца</div>
+        </div>
+        <div class="movie" tabindex="0">
+          <img src="https://upload.wikimedia.org/wikipedia/en/1/1d_One_Flew_Over_the_Cuckoo%27s_Nest.jpg" alt="Пролетая над гнездом кукушки">
+          <div class="small">Пролетая над гнездом кукушки</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacts" class="card reveal" aria-labelledby="contactsTitle" style="margin-top:18px">
+      <h2 id="contactsTitle">Контакты</h2>
+      <div class="contact">
+        <a href="mailto:arsen.dev@example.com">arsen.dev@example.com</a>
+        <a href="tel:+996777123456">+996 (777) 123-456</a>
+        <a href="https://github.com/arsenisk" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/arsenisk" target="_blank">LinkedIn</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="small">
+    © 2025 Arsen Iskenderov. Все права защищены.
+  </footer>
+
+  <button id="themeToggle">☀️</button>
+  <button id="changeNameBtn">Сменить имя</button>
+  
+  <div id="toTop">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+  </div>
+  
+  <script>
+  // Гамбургер меню - для всех экранов
+  const hamburger = document.querySelector('.hamburger');
+  const mobileNav = document.querySelector('.mobile-nav');
+  const overlay = document.querySelector('.overlay');
+  
+  function toggleMenu() {
+    const isActive = hamburger.classList.toggle('active');
+    mobileNav.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = isActive ? 'hidden' : '';
+    hamburger.setAttribute('aria-expanded', isActive);
+  }
+  
+  hamburger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+  
+  // Закрытие меню при клике на ссылку
+  const mobileLinks = document.querySelectorAll('.mobile-nav a');
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', toggleMenu);
+  });
+
+  // Закрытие меню при нажатии Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+      toggleMenu();
+    }
+  });
+
+  // Синхронизация переключателей темы
+  const themeBtn = document.getElementById('themeToggle');
+  const themeBtnMobile = document.getElementById('themeToggleMobile');
+  
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    const isLight = document.body.classList.contains('light');
+    themeBtn.textContent = isLight ? '🌙' : '☀️';
+    themeBtnMobile.textContent = isLight ? '☀️ Сменить тему' : '🌙 Сменить тему';
+  }
+  
+  themeBtn.addEventListener('click', toggleTheme);
+  themeBtnMobile.addEventListener('click', toggleTheme);
+
+  // Reveal эффект
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+  },{threshold:0.15});
+  reveals.forEach(r=>observer.observe(r));
+
+  // Модальное окно для фильмов
+  const movies = document.querySelectorAll('.movie');
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.style.cssText = 'position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,0.65); z-index:120; padding:20px';
+  const box = document.createElement('div');
+  box.style.cssText = 'max-width:1000px; width:100%; background:var(--card); border-radius:12px; padding:14px; position:relative';
+  const modalImg = document.createElement('img');
+  modalImg.style.maxHeight = '80vh'; modalImg.style.display='block'; modalImg.style.margin='0 auto';
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent='✖';
+  closeBtn.style.cssText='position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;border:0;border-radius:6px;padding:4px 8px;cursor:pointer';
+  closeBtn.onclick=()=>{modal.style.display='none'};
+  box.appendChild(closeBtn); box.appendChild(modalImg); modal.appendChild(box); document.body.appendChild(modal);
+  movies.forEach(m=>{m.addEventListener('click',()=>{modalImg.src=m.querySelector('img').src; modal.style.display='grid';});});
+
+  // Вставка фото через Ctrl+V
+  const allImgs = document.querySelectorAll('img');
+  allImgs.forEach((img,i)=>{
+    img.setAttribute('tabindex','0'); img.dataset.index=i;
+    const saved=localStorage.getItem('savedImage_'+i);
+    if(saved) img.src=saved;
+  });
+  document.addEventListener('paste', e=>{
+    const active=document.activeElement;
+    if(!active || active.tagName!=='IMG') return; 
+    const items=e.clipboardData.items; 
+    for(const item of items){
+      if(item.type.startsWith('image/')){
+        const file=item.getAsFile();
+        const reader=new FileReader(); 
+        reader.onload=()=>{active.src=reader.result; localStorage.setItem('savedImage_'+active.dataset.index,reader.result);}; 
+        reader.readAsDataURL(file); 
+        break;
+      }
+    }
+  });
+  allImgs.forEach(img=>{
+    img.addEventListener('focus',()=>{img.style.outline='2px solid var(--accent)'; img.style.outlineOffset='3px'});
+    img.addEventListener('blur',()=>{img.style.outline='none'});
+  });
+
+  // Вставка фото в проекты
+  const projectImgs = document.querySelectorAll('.project .photo-frame img');
+  projectImgs.forEach((img,i)=>{
+    img.setAttribute('tabindex','0');
+    img.dataset.index='project_'+i;
+    const saved=localStorage.getItem('savedImage_project_'+i);
+    if(saved) img.src=saved;
+  });
+  document.addEventListener('paste', e=>{
+    const active = document.activeElement;
+    if(!active || active.tagName!=='IMG' || !active.dataset.index.startsWith('project_')) return;
+    const items = e.clipboardData.items;
+    for(const item of items){
+      if(item.type.startsWith('image/')){
+        const file = item.getAsFile();
+        const reader = new FileReader();
+        reader.onload = ()=>{ active.src = reader.result; localStorage.setItem(active.dataset.index, reader.result); };
+        reader.readAsDataURL(file);
+        break;
+      }
+    }
+  });
+
+  // Падающий код
+  const canvas = document.createElement('canvas'); document.body.appendChild(canvas);
+  canvas.style.position='fixed'; canvas.style.top='0'; canvas.style.left='0'; canvas.style.width='100%'; canvas.style.height='100%'; canvas.style.zIndex='-1';
+  const ctx = canvas.getContext('2d'); let w,h;
+  function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight;}
+  window.addEventListener('resize',resize); resize();
+  const cols = Math.floor(w/20)+1; const ypos = Array(cols).fill(0);
+  function matrix(){
+    ctx.fillStyle='rgba(11,11,11,0.05)';
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#a8324a';
+    ctx.font='16px monospace';
+    for(let i=0;i<cols;i++){
+      const char = String.fromCharCode(33+Math.random()*94);
+      ctx.fillText(char,i*20,ypos[i]*20);
+      if(ypos[i]*20>h && Math.random()>0.975) ypos[i]=0;
+      ypos[i]++;
+    }
+    requestAnimationFrame(matrix);
+  }
+  matrix();
+
+  // Приветствие и смена имени
+  window.addEventListener('DOMContentLoaded', ()=>{
+    const aboutTitle = document.getElementById('aboutTitle');
+    const changeNameBtn = document.getElementById('changeNameBtn');
+
+    // Функция обновления приветствия
+    function updateGreeting(name){
+      aboutTitle.textContent = `Привет, ${name}! — я Arsen`;
+    }
+
+    // Проверяем сохранённое имя
+    let userName = localStorage.getItem('userName');
+    if(!userName){
+      userName = prompt('Привет! Как тебя зовут?');
+      if(userName && userName.trim() !== ''){
+        userName = userName.trim();
+        localStorage.setItem('userName', userName);
+      } else {
+        userName = 'Гость';
+      }
+    }
+    updateGreeting(userName);
+
+    // Обработчик смены имени
+    changeNameBtn.addEventListener('click', ()=>{
+      const newName = prompt('Введи новое имя:');
+      if(newName && newName.trim() !== ''){
+        const trimmed = newName.trim();
+        localStorage.setItem('userName', trimmed);
+        updateGreeting(trimmed);
+      } else {
+        alert('Имя не изменено.');
+      }
+    });
+  });
+</script>
+</body>
+</html>
